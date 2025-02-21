@@ -61,6 +61,14 @@ static inline bool xtensa_stack_ptr_is_sane(uint32_t sp)
 	return valid;
 }
 
+__weak bool xtensa_ptr_executable_custom(const void *p) {
+	/* Assume all pointers are executable by default. You can override
+	 * this function!
+	 */
+	ARG_UNUSED(p);
+	return true;
+}
+
 static inline bool xtensa_ptr_executable(const void *p)
 {
 #if defined(CONFIG_SOC_SERIES_ESP32)
@@ -70,7 +78,7 @@ static inline bool xtensa_ptr_executable(const void *p)
 #elif defined(CONFIG_SOC_XTENSA_DC233C)
 	return xtensa_dc233c_ptr_executable(p);
 #else
-#warning "xtensa_ptr_executable is not defined for this platform"
+	return xtensa_ptr_executable_custom(p);
 #endif
 }
 
